@@ -1,7 +1,23 @@
 "use strict";
 
-let title, screens, screenPrice, rollback, fullPrice, adaptive;
+let title = "Project",
+  screens = "Простые, Сложные, Интерактивные",
+  screenPrice = 250,
+  rollback = 79,
+  fullPrice = 9000,
+  adaptive = true;
 
-alert("Текст в в модальном окне");
+console.log(typeof title);
+console.log(typeof fullPrice);
+console.log(typeof adaptive);
 
-console.log("Текст в консоль");
+console.log(screens.length);
+
+console.log("Стоимость верстки экранов " + screenPrice + " долларов");
+console.log("Стоимость разработки сайта " + fullPrice + " долларов");
+
+console.log(screens.toLowerCase().split());
+
+console.log(
+  "Процент отката посреднику за работу: " + fullPrice * (rollback / 100)
+);
