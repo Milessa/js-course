@@ -30,28 +30,30 @@ const getRollbackMessage = function (price) {
 };
 
 //сумму всех дополнительных услуг
-let allServicePrices = function getAllServicePrices() {
+const allServicePrices = function getAllServicePrices() {
   return servicePrice1 + servicePrice2;
 };
 
 //сумму стоимости верстки и стоимости дополнительных услуг
 function getFullPrice() {
-  return (fullPrice = screenPrice + allServicePrices());
+  return screenPrice + allServicePrices();
 }
 
 //Форматирование title
-function getTitle(titleCap) {
-  return (titleCap =
-    titleCap.trim().charAt(0).toUpperCase() +
-    titleCap.trim().slice(1).toLowerCase());
+function getTitle() {
+  return (
+    title.trim().charAt(0).toUpperCase() + title.trim().slice(1).toLowerCase()
+  );
 }
 
 //итоговую стоимость за вычетом процента отката
 function getServicePercentPrices() {
-  return (servicePercentPrice = Math.ceil(
-    getFullPrice() - (getFullPrice() * rollback) / 100
-  ));
+  return Math.ceil(fullPrice - (fullPrice * rollback) / 100);
 }
+
+fullPrice = getFullPrice();
+title = getTitle();
+servicePercentPrice = getServicePercentPrices();
 
 showTypeof(getTitle(title));
 showTypeof(getFullPrice());
@@ -59,11 +61,11 @@ showTypeof(adaptive);
 
 console.log(screens.toLowerCase().split());
 
-console.log(getRollbackMessage(getFullPrice()));
+console.log(getRollbackMessage(fullPrice));
 
 console.log("Стоимость верстки экранов " + screenPrice + " долларов");
-console.log("Стоимость разработки сайта " + getFullPrice() + " долларов");
+console.log("Стоимость разработки сайта " + fullPrice + " долларов");
 console.log(
-  "Процент отката посреднику за работу: " + getFullPrice() * (rollback / 100)
+  "Процент отката посреднику за работу: " + fullPrice * (rollback / 100)
 );
-console.log("Итоговая стоимость: " + getServicePercentPrices());
+console.log("Итоговая стоимость: " + servicePercentPrice);
