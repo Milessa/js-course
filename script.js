@@ -1,22 +1,76 @@
 "use strict";
 
-let title = prompt("Как называется ваш проект?"),
-  screens = prompt(
-    'Какие типы экранов нужно разработать?\nпример: "Простые, Сложные, Интерактивные"'
-  ),
-  screenPrice = +prompt("Сколько будет стоить данная работа?"),
-  adaptive = confirm("Нужен ли адаптив на сайте?"),
-  service1 = prompt("Какой дополнительный тип услуги нужен?"),
-  servicePrice1 = +prompt("Сколько это будет стоить?"),
-  service2 = prompt("Какой дополнительный тип услуги нужен?"),
-  servicePrice2 = +prompt("Сколько это будет стоить?"),
+let title,
+  screens,
+  screenPrice,
+  adaptive,
+  service1,
+  service2,
+  allServicePrices,
+  fullPrice,
+  servicePercentPrice,
   rollback = 79;
-let fullPrice, servicePercentPrice;
 
 const showTypeof = function (variable) {
   console.log(variable, typeof variable);
 };
 
+const isNumber = function (n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
+const asking = function () {
+  title = prompt("Как называется ваш проект?", "Калькулятор верстки");
+  screens = prompt(
+    "Какие типы экранов нужно разработать?",
+    "Простые, Сложные, Интерактивные"
+  );
+
+  do {
+    screenPrice = prompt("Сколько будет стоить данная работа?");
+  } while (!isNumber(screenPrice));
+
+  adaptive = confirm("Нужен ли адаптив на сайте?");
+};
+
+//сумму всех дополнительных услуг
+const getAllServicePrices = function () {
+  let sum = 0;
+
+  for (let i = 0; i < 2; i++) {
+    if (i === 0) {
+      service1 = prompt("Какой дополнительный тип услуги нужен?");
+    } else if (i === 1) {
+      service2 = prompt("Какой дополнительный тип услуги нужен?");
+    }
+
+    let servicePrices;
+    do {
+      servicePrices = prompt("Сколько это будет стоить?");
+    } while (!isNumber(servicePrices));
+    sum += +servicePrices;
+  }
+  return sum;
+};
+
+//сумму стоимости верстки и стоимости дополнительных услуг
+const getFullPrice = function () {
+  return screenPrice + allServicePrices;
+};
+
+//итоговую стоимость за вычетом процента отката
+const getServicePercentPrices = function () {
+  return Math.ceil(fullPrice - (fullPrice * rollback) / 100);
+};
+
+//Форматирование title
+const getTitle = function () {
+  return (
+    title.trim().charAt(0).toUpperCase() + title.trim().slice(1).toLowerCase()
+  );
+};
+
+//конструкции условия
 const getRollbackMessage = function (price) {
   if (price >= 30000) {
     return "Даем скидку в 10%";
@@ -29,35 +83,19 @@ const getRollbackMessage = function (price) {
   }
 };
 
-//сумму всех дополнительных услуг
-const allServicePrices = function getAllServicePrices() {
-  return servicePrice1 + servicePrice2;
-};
+asking();
 
-//сумму стоимости верстки и стоимости дополнительных услуг
-function getFullPrice() {
-  return screenPrice + allServicePrices();
-}
-
-//Форматирование title
-function getTitle() {
-  return (
-    title.trim().charAt(0).toUpperCase() + title.trim().slice(1).toLowerCase()
-  );
-}
-
-//итоговую стоимость за вычетом процента отката
-function getServicePercentPrices() {
-  return Math.ceil(fullPrice - (fullPrice * rollback) / 100);
-}
-
+//переопредиление значение переменных
+allServicePrices = getAllServicePrices();
 fullPrice = getFullPrice();
-title = getTitle();
 servicePercentPrice = getServicePercentPrices();
+title = getTitle();
 
-showTypeof(getTitle(title));
-showTypeof(getFullPrice());
+showTypeof(title);
+showTypeof(fullPrice);
 showTypeof(adaptive);
+
+console.log("allServicePrices", allServicePrices);
 
 console.log(screens.toLowerCase().split());
 
