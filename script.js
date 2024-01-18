@@ -48,7 +48,7 @@ const getAllServicePrices = function () {
     do {
       servicePrices = prompt("Сколько это будет стоить?");
     } while (!isNumber(servicePrices));
-    sum += +servicePrices;
+    sum += servicePrices;
   }
   return sum;
 };
