@@ -2,11 +2,10 @@
 
 const appData = {
   title: "",
-  screens: "",
+  screens: [],
   screenPrice: 0,
   adaptive: true,
-  service1: "",
-  service2: "",
+  services: {},
   allServicePrices: 0,
   fullPrice: 0,
   servicePercentPrice: 0,
@@ -14,66 +13,89 @@ const appData = {
 
   start: function () {
     appData.asking();
-    //переопредиление значение переменных
-    appData.allServicePrices = appData.getAllServicePrices();
-    appData.fullPrice = appData.getFullPrice();
-    appData.servicePercentPrice = appData.getServicePercentPrices();
-    appData.title = appData.getTitle();
-    //Вывод в консоль
+    appData.addPrices();
+    appData.getFullPrice();
+    appData.getServicePercentPrices();
+    appData.getTitle();
     appData.logger();
   },
 
   asking: function () {
-    appData.title = prompt("Как называется ваш проект?", "Калькулятор верстки");
-    appData.screens = prompt(
-      "Какие типы экранов нужно разработать?",
-      "Простые, Сложные, Интерактивные"
-    );
-
     do {
-      appData.screenPrice = prompt("Сколько будет стоить данная работа?");
-    } while (!appData.isNumber(appData.screenPrice));
+      appData.title = prompt(
+        "Как называется ваш проект?",
+        "калькулятор верстки"
+      );
+    } while (!appData.isString(appData.title));
+
+    for (let i = 0; i < 2; i++) {
+      let name;
+      let price = 0;
+
+      do {
+        name = prompt("Какие типы экранов нужно разработать?");
+      } while (!appData.isString(name));
+
+      do {
+        price = prompt("Сколько будет стоить данная работа?");
+      } while (!appData.isNumber(price));
+
+      appData.screens.push({ id: i, name: name, price: price });
+    }
+
+    for (let screen of appData.screens) {
+      appData.screenPrice += +screen.price;
+    }
+
+    for (let i = 0; i < 2; i++) {
+      let name;
+      let servicePrices = 0;
+
+      do {
+        name = prompt("Какой дополнительный тип услуги нужен?");
+      } while (!appData.isString(name));
+
+      do {
+        servicePrices = prompt("Сколько это будет стоить?");
+      } while (!appData.isNumber(servicePrices));
+
+      appData.services[name] = +servicePrices;
+    }
 
     appData.adaptive = confirm("Нужен ли адаптив на сайте?");
   },
   isNumber: function (n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   },
+  isString: function (x) {
+    let validation = /^^(?!\s)(?!\d)[, а-яА-ЯёЁa-zA-Z\d]+$/;
+    return validation.test(x);
+  },
   //сумму всех дополнительных услуг
   getAllServicePrices: function () {
-    let sum = 0;
-
-    for (let i = 0; i < 2; i++) {
-      if (i === 0) {
-        appData.service1 = prompt("Какой дополнительный тип услуги нужен?");
-      } else if (i === 1) {
-        appData.service2 = prompt("Какой дополнительный тип услуги нужен?");
-      }
-
-      let servicePrices;
-      do {
-        servicePrices = prompt("Сколько это будет стоить?");
-      } while (!appData.isNumber(servicePrices));
-      sum += +servicePrices;
+    for (let key in appData.services) {
+      appData.allServicePrices += appData.services[key];
     }
-    return sum;
+  },
+  //сумма всех дополнительных услуг
+  addPrices: function () {
+    for (let screen of appData.screens) {
+      appData.screenPrice += +screen.price;
+    }
+
+    for (let key in appData.services) {
+      appData.allServicePrices += appData.services[key];
+    }
   },
   //сумму стоимости верстки и стоимости дополнительных услуг
   getFullPrice: function () {
-    return +appData.screenPrice + appData.allServicePrices;
-  },
-  //итоговую стоимость за вычетом процента отката
-  getServicePercentPrices: function () {
-    return Math.ceil(
-      appData.fullPrice - (appData.fullPrice * appData.rollback) / 100
-    );
+    appData.fullPrice = +appData.screenPrice + appData.allServicePrices;
   },
   //Форматирование title
   getTitle: function () {
-    return (
+    appData.title =
       appData.title.trim().charAt(0).toUpperCase() +
-      appData.title.trim().slice(1).toLowerCase()
-    );
+      appData.title.trim().slice(1).toLowerCase();
   },
   //конструкции условия
   getRollbackMessage: function (price) {
@@ -89,9 +111,9 @@ const appData = {
   },
 
   logger: function () {
-    for (let key in appData) {
-      console.log(key + ": " + appData[key]);
-    }
+    console.log(appData.fullPrice);
+    console.log(appData.servicePercentPrice);
+    console.log(appData.screens);
   },
 };
 
