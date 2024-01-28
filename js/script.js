@@ -1,4 +1,40 @@
 "use strict";
+const getTitle = document.getElementsByTagName("h1")[0];
+console.log(getTitle);
+
+const btnReset = document.getElementsByClassName("handler_btn")[0];
+console.log(btnReset);
+
+const btnRestart = document.getElementsByClassName("handler_btn")[1];
+console.log(btnRestart);
+
+const btnPlus = document.querySelector(".screen-btn");
+console.log(btnPlus);
+
+const percent = document.querySelectorAll(".other-items.percent");
+console.log(percent);
+const number = document.querySelectorAll(".other-items.number");
+console.log(number);
+
+const inputRange = document.querySelector("div.rollback input[type=range]");
+console.log(inputRange);
+
+const span = document.querySelector("div.rollback .range-value");
+console.log(span);
+
+const total = document.getElementsByClassName("total-input")[0];
+const totalCount = document.getElementsByClassName("total-input")[1];
+const totalCountOther = document.getElementsByClassName("total-input")[2];
+const totalFullCount = document.getElementsByClassName("total-input")[3];
+const totalCountRollback = document.getElementsByClassName("total-input")[4];
+console.log(total);
+console.log(totalCount);
+console.log(totalCountOther);
+console.log(totalFullCount);
+console.log(totalCountRollback);
+
+let screenClass = document.querySelectorAll(".screen");
+console.log(screenClass);
 
 const appData = {
   title: "",
