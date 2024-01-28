@@ -48,7 +48,6 @@ const appData = {
     appData.addScreens();
     appData.addServices();
     appData.addPrices();
-    // appData.getServicePercentPrice();
     // appData.logger();
     appData.showResult();
   },
@@ -114,10 +113,6 @@ const appData = {
     //console.log(cloneScreen);
     screens[screens.length - 1].after(cloneScreen);
   },
-  addInputRange: function () {
-    inputRangeValue.textContent = inputRange.value + "%";
-    appData.rollback = inputRange.value;
-  },
   //сумма всех дополнительных услуг
   addPrices: function () {
     for (let screen of appData.screens) {
@@ -141,9 +136,14 @@ const appData = {
       appData.servicePricesPercent +
       appData.servicePricesNumber;
 
-    appData.servicePercentPrice = Math.ceil(
-      appData.fullPrice - appData.fullPrice * (appData.rollback / 100)
-    );
+    appData.getServicePercentPrice();
+  },
+  addInputRange: function () {
+    inputRangeValue.textContent = inputRange.value + "%";
+    appData.rollback = +inputRange.value;
+
+    appData.getServicePercentPrice();
+    appData.showResult();
   },
   //итоговая стоимость за вычетом процента отката
   getServicePercentPrice: function () {
