@@ -19,6 +19,13 @@ const totalCountRollback = document.getElementsByClassName("total-input")[4];
 const allInputText = document.getElementsByClassName("all-inputs");
 const allSelect = document.getElementsByTagName("select");
 
+const cmsCheck = document.getElementById("cms-open");
+const visibleCms = document.getElementsByClassName("hidden-cms-variants")[0];
+const cmsValue = document.getElementById("cms-select");
+const cmsValueOther = document.querySelector(
+  "div.hidden-cms-variants .main-controls__input"
+);
+
 let screens = document.querySelectorAll(".screen");
 
 const appData = {
@@ -44,6 +51,8 @@ const appData = {
 
     btnStart.addEventListener("click", this.start.bind(this));
     btnReset.addEventListener("click", this.reset.bind(this));
+
+    cmsCheck.addEventListener("click", appData.addCMS);
 
     btnPlus.addEventListener("click", this.addScreenBlock, true);
   },
@@ -111,6 +120,10 @@ const appData = {
     //input default value
     inputRangeValue.textContent = inputRange.defaultValue + "%";
     inputRange.value = "0";
+
+    //cms
+    visibleCms.style.display = "none";
+    cmsValue.selectedIndex = "0";
   },
   showResult: function () {
     total.value = this.screenPrice;
@@ -183,7 +196,19 @@ const appData = {
     inputRangeValue.textContent = inputRange.value + "%";
     this.rollback = inputRange.value;
   },
-  //сумма всех дополнительных услуг
+  addCMS: function () {
+    if (cmsCheck.checked) {
+      visibleCms.style.display = "flex";
+    }
+
+    cmsValue.onchange = () => {
+      if (cmsValue.value === "other") {
+        cmsValueOther.style.display = "initial";
+      } else {
+        cmsValueOther.style.display = "none";
+      }
+    };
+  },
   addPrices: function () {
     for (let screen of this.screens) {
       this.screenPrice += +screen.price;
@@ -203,6 +228,13 @@ const appData = {
     }
     this.fullPrice =
       +this.screenPrice + this.servicePricesPercent + this.servicePricesNumber;
+
+    if (cmsValue.value === "50") {
+      this.fullPrice = this.fullPrice + this.fullPrice * 0.5;
+    } else if (cmsValue.value === "other") {
+      const input = document.querySelector("#cms-other-input");
+      this.fullPrice = this.fullPrice + this.fullPrice * (+input.value / 100);
+    }
 
     this.servicePercentPrice = Math.ceil(
       this.fullPrice - this.fullPrice * (this.rollback / 100)
@@ -231,7 +263,6 @@ const appData = {
     btnStart.style.display = "none";
     btnReset.style.display = "initial";
   },
-  //итоговая стоимость за вычетом процента отката
   getServicePercentPrice: function () {
     this.servicePercentPrice = Math.ceil(
       this.fullPrice - this.fullPrice * (this.rollback / 100)
