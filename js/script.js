@@ -32,6 +32,7 @@ const appData = {
   servicePricesNumber: 0,
   fullPrice: 0,
   servicePercentPrice: 0,
+  isError: false,
   init: function () {
     appData.addTitle();
 
@@ -45,12 +46,14 @@ const appData = {
     document.title = title.textContent;
   },
   start: function () {
-    appData.addScreens();
-    appData.addServices();
-    appData.addPrices();
-    // appData.getServicePercentPrice();
-    // appData.logger();
-    appData.showResult();
+    if (appData.addScreens()) {
+      // appData.addScreens();
+      appData.addServices();
+      appData.addPrices();
+      // appData.getServicePercentPrice();
+      // appData.logger();
+      appData.showResult();
+    }
   },
   showResult: function () {
     total.value = appData.screenPrice;
@@ -74,8 +77,10 @@ const appData = {
 
       if (select.selectedIndex === 0) {
         alert("Выберите хотя бы один тип экрана ");
+        appData.isError = true;
       } else if (input.value === "") {
         alert("Укажите количество экранов");
+        appData.isError = true;
       } else {
         appData.screens.push({
           id: index,
@@ -86,6 +91,8 @@ const appData = {
         appData.count[selectName] = +input.value;
       }
     });
+
+    return !appData.isError;
   },
   addServices: function () {
     otherItemsPercent.forEach(function (item) {
@@ -111,7 +118,6 @@ const appData = {
   addScreenBlock: function () {
     const cloneScreen = screens[0].cloneNode(true);
 
-    //console.log(cloneScreen);
     screens[screens.length - 1].after(cloneScreen);
   },
   addInputRange: function () {
